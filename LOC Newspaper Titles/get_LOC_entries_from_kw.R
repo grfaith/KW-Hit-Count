@@ -11,8 +11,20 @@ setwd("C:\\Users\\grfai\\Documents\\0_Dissertation\\Code\\ChronAm\\LOC Newspaper
 baseurl <- "https://chroniclingamerica.loc.gov/search/pages/results/"
 
 rowsperpg <- 1000
+kw_file = "keyword_hit_totals_by_year.csv"
+startyr <- 1777
+endyr <- 1963
 
-kw_file="keyword_hit_totals_by_year.csv"
+#### Creating Hit Table, key words, etc.
+key_words <- read.csv(file=kw_file,sep=",")
+key_words <- key_words$Term
+key_words <- key_words[!duplicated(key_words)]
+
+# s_term <- "asteroid"
+# s_year <- 1857
+
+
+
 
 ##### Function
 
@@ -21,15 +33,16 @@ s_hits = function (s_term,s_year) {
   page <- 1
   maxPages <- 1
   hits <-0
-  search_pause <- 8
+  # hit_table <- read.csv (file=myfile)  
+  search_pause <- 7
   
-  
-  #creating directory structure
-  myfile <- file.path(getwd(),"data_output",s_term)
-  dir.create (myfile)
-  myfile <- file.path(myfile,(paste0("LOC_", s_term, "_", s_year, ".csv")))
+  #### Set file name dynamically, create hit file
+  ####myfile <- (paste0("LOC_", s_term, "_", s_year, ".txt"))
 
-  
+  hit_table = data.frame(matrix(nrow=0,ncol=(length(key_words)+1)))
+  colnames(hit_table) = c("search_id",key_words)
+  write.table (hit_table,file=myfile, sep=",")
+
   ### pages loop
   while(page <= maxPages) {
   
@@ -63,13 +76,24 @@ s_hits = function (s_term,s_year) {
     clean_resp <- subset(clean_resp, id!="NA")
 
 #### Loop several times to get all pages of results 
-
+    
     for(numrows in 1:(nrow (clean_resp))) {
       current_id <- (clean_resp$id[[numrows]])
       current_id <- gsub("info:lc/ndnp/lccn/","",current_id)
-      hit_table <- rbind (hit_table,current_id)
-    } 
-    
+
+          if (isFALSE(current_id %in% hit_table$search_id)) {
+            
+            
+            new_row = data.frame(matrix(0,nrow=1,ncol=(1+length(key_words))))
+            colnames(new_row) = c("search_id",key_words)
+            new_row$search_id <- current_id
+            hit_table <- rbind (hit_table,new_row)
+          } 
+          
+      add_to_row <- which(hit_table$search_id == current_id) 
+      add_to_col <- which(colnames(hit_table) == s_term)
+      hit_table[add_to_row,add_to_col] <- hit_table[add_to_row,add_to_col] + 1
+      } 
     write.table (hit_table,file=myfile, sep=",", row.names=FALSE, quote = FALSE)
     Sys.sleep(search_pause)
     page <- page + 1
@@ -83,19 +107,15 @@ s_hits = function (s_term,s_year) {
 ##### Loop through the Lex
 
 search_lex <- read.csv(kw_file)
-names(search_lex) <- c("lex_term,lex_year")
+names(search_lex) <- c("lex_term,lex_year,lex_counts")
 
-# specifies starting row to resume searches mid-list
-startrow <- 1
-
-
-for(search_row in startrow:nrow(search_lex)) {
+for(search_row in 1:nrow(search_lex)) {
   lex_term <- search_lex[search_row,1]
   lex_year <- search_lex[search_row,2]
-  lex_count <- search_lex[search_row,3]
-  if (lex_count >0) {
+  lex_counts <- search_lex[search_row,3]
+  while (lex_counts > 0) {
     print (Sys.time())
-    print(noquote(c("The Current Term is ",lex_term,lex_year," ")))
-    s_hits(lex_term,lex_year)
+    print(noquote(c("The Current Term is ",lex_term," ")))
   }
+  s_hits(lex_term,lex_year)
 }
