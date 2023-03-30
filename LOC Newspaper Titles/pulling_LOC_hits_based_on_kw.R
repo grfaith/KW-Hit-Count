@@ -114,7 +114,11 @@ s_hits = function (s_term,s_year) {
 search_lex <- read.csv(kw_file)
 names(search_lex) <- c("lex_term,lex_year")
 
-for(search_row in 1:nrow(search_lex)) {
+# specifies starting row to resume searches mid-list
+startrow <- 1
+
+
+for(search_row in startrow:nrow(search_lex)) {
   lex_term <- search_lex[search_row,1]
   lex_year <- search_lex[search_row,2]
   lex_count <- search_lex[search_row,3]
