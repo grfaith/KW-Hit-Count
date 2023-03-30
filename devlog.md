@@ -1,5 +1,5 @@
 
-**March 24, 2023: Version 2 Development Launch	**
+**March 24, 2023: Version 2 Development Launch**
 
 (Start) As of today, the coding has progressed to the point described in the DFD 0_Dissertation\Code\ChronAm\230317_ChronAm_DFD.pdf with the line ‘current progress’.
 Recent efforts have included implementing a more logical directory system for code, data, and research as well as some (conceptual) provisions for backing everything up once we’re fully underway again. I’m also experimenting with various git options to provide better version control (at least for code).
