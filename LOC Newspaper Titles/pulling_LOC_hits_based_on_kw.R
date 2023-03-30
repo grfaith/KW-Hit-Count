@@ -19,9 +19,9 @@ key_words <- read.csv(file=kw_file,sep=",")
 key_words <- key_words$Term
 key_words <- key_words[!duplicated(key_words)]
 
-hit_table = data.frame(matrix(nrow=0,ncol=(length(key_words)+1)))
-colnames(hit_table) = c("search_id",key_words)
-write.table (hit_table,file="init_file.csv", sep=",")
+init_hits = data.frame(matrix(nrow=0,ncol=(length(key_words)+1)))
+colnames(init_hits) = c("search_id",key_words)
+write.table (init_hits,file="init_file.csv", sep=",")
 
 
 # s_term <- "asteroid"
@@ -35,14 +35,18 @@ s_hits = function (s_term,s_year) {
   page <- 1
   maxPages <- 1
   hits <-0
-  hit_table <- read.csv (file="init_file.csv")
-
-  
-  
-
-  
-  
   search_pause <- 8
+  
+  
+  #creating directory structure
+  myfile <- file.path(getwd(),"data_output",s_term)
+  dir.create (myfile)
+  myfile <- file.path(myfile,(paste0("LOC_", s_term, "_", s_year, ".csv")))
+  write.csv (init_hits,myfile)
+
+  hit_table <- read.csv (myfile)
+  
+
   
   ### pages loop
   while(page <= maxPages) {
@@ -77,7 +81,7 @@ s_hits = function (s_term,s_year) {
     clean_resp <- subset(clean_resp, id!="NA")
 
 #### Loop several times to get all pages of results 
-    
+## NOTE: This is still writing entire vector rows. A more efficient implementation would not do that. But it works, so...    
     for(numrows in 1:(nrow (clean_resp))) {
       current_id <- (clean_resp$id[[numrows]])
       current_id <- gsub("info:lc/ndnp/lccn/","",current_id)
