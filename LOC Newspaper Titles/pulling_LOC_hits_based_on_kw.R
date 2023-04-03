@@ -59,7 +59,7 @@ s_hits = function (s_term,s_year) {
     # Reads atom file to get list of ids    
     result <- read_xml(query)
     result <- xmlParse(result)
-    clean_resp <- xmlToDataFrame(result)
+    clean_resp <- xmlToDataFrame(result)  
     clean_resp <- subset(clean_resp, id!="NA")
 
 #### Loop several times to get all pages of results 
@@ -86,7 +86,7 @@ search_lex <- read.csv(kw_file)
 names(search_lex) <- c("lex_term,lex_year")
 
 # specifies starting row to resume searches mid-list
-startrow <- 1
+startrow <- 6198
 
 
 for(search_row in startrow:nrow(search_lex)) {
