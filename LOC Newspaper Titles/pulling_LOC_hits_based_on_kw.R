@@ -26,11 +26,10 @@ s_hits = function (s_term,s_year) {
   
   #creating directory structure
   myfile <- file.path(getwd(),"data_output",s_term)
-  if (file.exists(myfile) == FALSE) {dir.create (myfile)}
-  filename <- paste0("LOC_", s_term, "_", s_year, ".csv")
-  myfile <- file.path(myfile,filename)
+  dir.create (myfile)
+  myfile <- file.path(myfile,(paste0("LOC_", s_term, "_", s_year, ".csv")))
 
-  
+  hit_table <- read.csv("init.csv")
   
   ### pages loop
   while(page <= maxPages) {
