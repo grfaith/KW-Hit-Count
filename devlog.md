@@ -18,4 +18,7 @@ OK. Clock is running down, but here’s the general idea. If we do one file for 
 **March 30, 2023: LOC Title Pull**
 I have a tentative directory/file structure in mind for this part, but want to fix the gitignore file so its not getting so very clogged up. Sent the 23Mar22 DFD to Abby. 
 
+**April 4, 2023: Cleaning LOC Title Pull**
+I've run the title pull twice. Today was cleaning up the code to eliminate warning messages from trying to create directories that already exist. Also updated gitignore file. Wasn't having any luck with blocking out data_output directories, but was able to ignore csv files. Included ! prefix to create exception in gitignore for keyword file.
+
 
