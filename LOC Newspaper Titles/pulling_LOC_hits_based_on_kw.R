@@ -26,9 +26,11 @@ s_hits = function (s_term,s_year) {
   
   #creating directory structure
   myfile <- file.path(getwd(),"data_output",s_term)
-  dir.create (myfile)
-  myfile <- file.path(myfile,(paste0("LOC_", s_term, "_", s_year, ".csv")))
+  if (file.exists(myfile) == FALSE) {dir.create (myfile)}
+  filename <- paste0("LOC_", s_term, "_", s_year, ".csv")
+  myfile <- file.path(myfile,filename)
 
+  
   
   ### pages loop
   while(page <= maxPages) {
@@ -86,7 +88,7 @@ search_lex <- read.csv(kw_file)
 names(search_lex) <- c("lex_term,lex_year")
 
 # specifies starting row to resume searches mid-list
-startrow <- 6198
+startrow <- 7439
 
 
 for(search_row in startrow:nrow(search_lex)) {
